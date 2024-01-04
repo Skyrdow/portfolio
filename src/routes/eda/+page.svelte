@@ -15,6 +15,8 @@
             { id: 2, name: "Nodo 2"},
             { id: 3, name: "Nodo 3"},
             { id: 4, name: "Nodo 4"},
+            { id: 45, name: "Nodo 45"},
+            { id: 6, name: "Nodo 6"},
             // ... más nodos
         ];
 
@@ -22,6 +24,8 @@
             { source: 1, target: 2 },
             { source: 2, target: 3 },
             { source: 3, target: 4 },
+            { source: 45, target: 4 },
+            { source: 6, target: 4 },
             // ... más conexiones
         ];
 
@@ -37,8 +41,7 @@
             .force(
                 "link",
                 d3.forceLink(links).id((d) => d.id),
-            );
-            //  .force("charge", d3.forceManyBody());
+            ).force("center", d3.forceCenter()).force("charge", d3.forceManyBody());
 
         var link = svg
             .append("g")
