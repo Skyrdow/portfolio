@@ -65,7 +65,7 @@
       (acumulado, objeto) => acumulado + objeto.ponderacion,
       0,
     );
-    da_ponderacion = acumulador_ponderaciones === 1;
+    da_ponderacion = Math.round(acumulador_ponderaciones * 100) / 100 === 1;
   }
 
   // revisar si cantidad no es negativa o sino crashea
