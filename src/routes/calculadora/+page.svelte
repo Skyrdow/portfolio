@@ -8,7 +8,9 @@
   let cantidad = 2,
     min = 1,
     max = 7,
-    promedio = 0;
+    promedio = 1;
+
+  $: porcentaje_promedio = ((promedio - 1) * 100) / 6;
 
   $: {
     while (evaluaciones.length !== cantidad) {
@@ -22,6 +24,7 @@
         evaluaciones.pop();
       }
     }
+    promedio = calcular_promedio(evaluaciones);
   }
 
   $: promedio = calcular_promedio(evaluaciones);
@@ -45,19 +48,28 @@
 </script>
 
 <div class="border-[6px] border-slate-200 p-10 rounded-lg">
-  <div class="flex flex-row flex-wrap bg-slate-200 h-fit gap-10">
+  <div class="flex flex-row flex-wrap items-baseline bg-slate-200 h-fit gap-10">
     <label class="p-5 flex"
       >Cantidad de Evaluaciones
       <input type="number" bind:value={cantidad} />
     </label>
 
-    <p>Promedio: {promedio.toFixed(2)}</p>
+    <p
+      class="radial-progress"
+      class:text-error={promedio < 4}
+      class:text-success={promedio >= 4}
+      style="--value:{porcentaje_promedio};--size:10rem;"
+    >
+      Promedio: {promedio.toFixed(2)}
+    </p>
 
-    <label>
-      Promedio simple?:
-      <input type="checkbox" bind:checked={promedio_simple} />
-      {promedio_simple}
-    </label>
+    <label for="promedio"> Promedio simple?: </label>
+    <input
+      id="promedio"
+      class="checkbox"
+      type="checkbox"
+      bind:checked={promedio_simple}
+    />
 
     <button class="bg-green-700 rounded-lg p-5" on:click={calc}
       >Calcular notas minimas
@@ -70,12 +82,14 @@
         <label class="bg-slate-200 p-4">
           Nota
           <input
+            class="range"
+            class:range-warning={evaluaciones[i].nota < 4}
+            class:range-error={evaluaciones[i].nota > 7}
             type="range"
             {min}
             {max}
             step="0.1"
             bind:value={evaluaciones[i].nota}
-            class:bg-red-100={promedio_simple}
           />
           <p>{evaluaciones[i].nota.toFixed(1)}</p>
         </label>
@@ -83,6 +97,7 @@
           <label class="bg-slate-200 p-4">
             Ponderación
             <input
+              class="range"
               type="range"
               min="0"
               max="1"
@@ -94,6 +109,7 @@
         {/if}
         <label class="bg-slate-200 p-4"
           >Es pendiente? <input
+            class="checkbox"
             type="checkbox"
             bind:checked={evaluaciones[i].es_pendiente}
           /></label
