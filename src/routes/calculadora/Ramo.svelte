@@ -1,12 +1,14 @@
 <script>
   import { calcular_notas_minimas, calcular_promedio } from "./calculadora";
 
+  /** @type {import('./calculadora').Ramo} */
+  export let ramo;
   /** @type {Array<import('./calculadora').Evaluacion>} */
-  export let evaluaciones = [];
+  let evaluaciones = ramo.evaluaciones;
 
   let promedio_simple = false,
     da_ponderacion = true;
-  let cantidad = 2,
+  let cantidad = evaluaciones.length,
     cantidad_temp = cantidad,
     min = 1,
     max = 7,
@@ -138,11 +140,12 @@
             <label class="grow" for="nota">
               Nota: {evaluaciones[i].nota.toFixed(1)}
             </label>
-            <label for="es_pendiente-{i}">Es pendiente? </label>
+            <label for="es_pendiente-{i}">Es pendiente?</label>
             <input
               id="es_pendiente-{i}"
               class="checkbox"
               type="checkbox"
+              bind:checked={evaluaciones[i].es_pendiente}
               on:click={() => {
                 evaluaciones[i].nota = 1;
                 evaluaciones[i].es_pendiente = !evaluaciones[i].es_pendiente;
