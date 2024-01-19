@@ -45,7 +45,7 @@
 </script>
 
 <div class="border-[6px] border-slate-200 p-10 rounded-lg">
-  <div class="flex flex-row bg-slate-200 h-fit gap-10">
+  <div class="flex flex-row flex-wrap bg-slate-200 h-fit gap-10">
     <label class="p-5 flex"
       >Cantidad de Evaluaciones
       <input type="number" bind:value={cantidad} />
@@ -75,6 +75,7 @@
             {max}
             step="0.1"
             bind:value={evaluaciones[i].nota}
+            class:bg-red-100={promedio_simple}
           />
           <p>{evaluaciones[i].nota.toFixed(1)}</p>
         </label>
