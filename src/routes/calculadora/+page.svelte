@@ -8,7 +8,25 @@
   }
 
   /** @type {Array<import('./calculadora').Ramo>} */
-  let data = [{ nombre: "Nuevo Ramo", evaluaciones: [] }];
+  let data = [
+    {
+      nombre: "Nuevo Ramo",
+      evaluaciones: [
+        {
+          nombre: "",
+          nota: 1,
+          ponderacion: 0.5,
+          es_pendiente: false,
+        },
+        {
+          nombre: "",
+          nota: 1,
+          ponderacion: 0.5,
+          es_pendiente: false,
+        },
+      ],
+    },
+  ];
 
   if (str_data !== null) data = JSON.parse(str_data);
 
@@ -24,17 +42,23 @@
   }
 
   function add_ramo() {
-    data.push({ nombre: "Nuevo Ramo", evaluaciones: [{
+    data.push({
+      nombre: "Nuevo Ramo",
+      evaluaciones: [
+        {
           nombre: "",
           nota: 1,
           ponderacion: 0.5,
           es_pendiente: false,
-        }, {
+        },
+        {
           nombre: "",
           nota: 1,
           ponderacion: 0.5,
           es_pendiente: false,
-        }] });
+        },
+      ],
+    });
     current_index = data.length - 1;
     data = data;
   }
