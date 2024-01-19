@@ -412,9 +412,9 @@
     <h1 class="text-center text-xl">Nivel {semestre.nivel}</h1>
     <div class="flex flex-row overflow-x-scroll gap-10 p-10">
       {#each semestre.cursos as curso}
-       {#if curso.link != undefined}
-        <Proyecto {...curso}></Proyecto>
-       {/if}
+        {#if curso.link != undefined}
+          <Proyecto {...curso}></Proyecto>
+        {/if}
       {/each}
     </div>
   {/each}
