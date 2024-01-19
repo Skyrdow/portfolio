@@ -2,9 +2,15 @@ export { calcular_notas_minimas, calcular_promedio };
 
 /**
  * @typedef Evaluacion
+ * @property {String} nombre
  * @property {Number} nota
  * @property {Number} ponderacion
  * @property {boolean} es_pendiente
+ */
+/**
+ * @typedef Ramo
+ * @property {String} nombre
+ * @property {Array<Evaluacion>} evaluaciones
  */
 
 /**
@@ -12,6 +18,9 @@ export { calcular_notas_minimas, calcular_promedio };
  * @param {Array<Evaluacion>} evaluaciones
  */
 function calcular_notas_minimas(evaluaciones) {
+  if (!evaluaciones.some((item) => item.es_pendiente)) {
+    return evaluaciones;
+  }
   while (calcular_promedio(evaluaciones) <= 4) {
     for (let i = 0; i < evaluaciones.length; i++) {
       if (evaluaciones[i].es_pendiente) {
