@@ -92,6 +92,7 @@
     <img src="/plus.svg" alt="Add icon" />
   </button>
 </div>
+
 {#key current_index}
   <div class="bg-primary">
     <Ramo ramo={data[current_index]} />
