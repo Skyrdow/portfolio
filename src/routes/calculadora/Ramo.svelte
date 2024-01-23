@@ -1,5 +1,7 @@
 <script>
   import { calcular_notas_minimas, calcular_promedio } from "./calculadora";
+  import NumberInput from "./NumberInput.svelte";
+  import Checkbox from "./Checkbox.svelte";
 
   /** @type {import('./calculadora').Ramo} */
   export let ramo;
@@ -72,28 +74,14 @@
   $: cantidad = cantidad_temp > 0 ? cantidad_temp : cantidad;
 </script>
 
-<div class="border-[6px] border-slate-200 p-10 rounded-lg">
+<div class="neob-border bg-primary p-7 rounded-lg">
   <div class="flex flex-row flex-wrap items-center bg-slate-200 h-fit gap-10">
     <div class="flex flex-col p-5 items-center w-72">
-      <div class="flex flex-row justify-evenly w-full">
-        <label for="cantidad">Cantidad de Evaluaciones: </label>
-        <input
-          class="w-12 text-center"
-          id="cantidad"
-          type="number"
-          min="1"
-          bind:value={cantidad_temp}
-        />
-      </div>
-      <div class="flex flex-row justify-evenly w-full">
-        <label for="promedio"> Promedio simple?: </label>
-        <input
-          id="promedio"
-          class="checkbox"
-          type="checkbox"
-          bind:checked={promedio_simple}
-        />
-      </div>
+      
+      <label for="cantidad">Cantidad de Evaluaciones: </label>
+      
+      <NumberInput id="cantidad" bind:value={cantidad_temp}/>
+      <Checkbox value={promedio_simple} label="Promedio Simple" class="bg-success"/>
     </div>
     <div
       class="flex flex-col gap-2 w-60 tooltip-warning"
@@ -103,22 +91,26 @@
         2,
       )})"
     >
-      <p
-        class="radial-progress"
+      <div
+        class="text-3xl radial-progress bg-success-content border-4 border-success-content"
         class:text-error={promedio < 4}
         class:text-success={promedio >= 4}
         style="--value:{porcentaje_promedio};--size:10rem;"
       >
-        Promedio: {promedio.toFixed(2)}
-      </p>
+        {promedio.toFixed(2)}
+      </div>
     </div>
+    
 
     <div
       class="flex flex-col gap-2 w-60 tooltip-warning"
       class:tooltip={hay_pendientes}
       data-tip="No hay suficientes notas pendientes"
     >
-      <button class="btn btn-success" disabled={hay_pendientes} on:click={calc}
+      <button
+        class="neob-clickable bg-success rounded-md disable-btn px-2 py-4 m-1"
+        disabled={hay_pendientes}
+        on:click={calc}
         >Calcular notas mínimas
       </button>
     </div>

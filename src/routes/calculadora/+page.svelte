@@ -94,9 +94,7 @@
 </div>
 
 {#key current_index}
-  <div class="bg-primary">
-    <Ramo ramo={data[current_index]} />
-  </div>
+  <Ramo ramo={data[current_index]} />
 {/key}
 
 <svelte:window on:keydown={onKeyDown} />
