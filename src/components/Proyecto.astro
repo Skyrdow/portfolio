@@ -1,0 +1,24 @@
+---
+interface Props {
+	titulo: string;
+	descripcion: string;
+	tags: string[];
+	link: string;
+}
+
+const { titulo, descripcion, tags, link } = Astro.props;
+---
+
+<a href={link} class="neob-clickable block bg-white p-5 transition-colors hover:bg-yellow-50">
+	<h3 class="mb-2 font-black">{titulo}</h3>
+	<p class="mb-3 text-sm leading-relaxed text-neutral-700">{descripcion}</p>
+	<div class="flex flex-wrap gap-2">
+		{
+			tags.map((tag) => (
+				<span class="rounded-full border border-black bg-neutral-100 px-2 py-0.5 text-xs">
+					{tag}
+				</span>
+			))
+		}
+	</div>
+</a>

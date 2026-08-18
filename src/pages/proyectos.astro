@@ -1,0 +1,87 @@
+---
+import Layout from '@layouts/Layout.astro';
+---
+
+<Layout title="Proyectos — Lucas Mesias">
+	<section class="space-y-12">
+		<div>
+			<h1 class="mb-2 text-3xl font-black">Proyectos</h1>
+			<p class="mb-8 text-neutral-600">
+				Sitios web que he desarrollado. Previsualización interactiva con iframe.
+			</p>
+		</div>
+
+		<!-- Proyecto 1: OSUSACH -->
+		<article class="space-y-4">
+			<div class="flex items-start justify-between gap-4">
+				<div>
+					<h2 class="text-xl font-black">OSUSACH</h2>
+					<p class="text-sm text-neutral-600">
+						Comunidad open source de la USACH. Desarrollo de interfaces con Astro, Svelte y Tailwind
+						CSS.
+					</p>
+				</div>
+				<a
+					href="https://www.osusach.cl"
+					target="_blank"
+					rel="noopener noreferrer"
+					class="neob-clickable shrink-0 bg-yellow-200 px-4 py-2 text-xs font-bold"
+				>
+					Ver sitio ↗
+				</a>
+			</div>
+			<div class="neob-border overflow-hidden bg-white">
+				<div class="border-b-2 border-black bg-neutral-100 px-4 py-2 text-xs font-bold">
+					https://www.osusach.cl
+				</div>
+				<iframe
+					src="https://www.osusach.cl"
+					class="h-[500px] w-full border-0"
+					loading="lazy"
+					sandbox="allow-scripts allow-same-origin"
+					title="OSUSACH"></iframe>
+			</div>
+			<div class="flex flex-wrap gap-2">
+				<span class="rounded-full neob-border bg-sky-100 px-3 py-1 text-xs">Astro</span>
+				<span class="rounded-full neob-border bg-orange-100 px-3 py-1 text-xs">Svelte</span>
+				<span class="rounded-full neob-border bg-cyan-100 px-3 py-1 text-xs"
+					>Tailwind CSS</span
+				>
+			</div>
+		</article>
+
+		<!-- Proyecto 2: Portafolio -->
+		<article class="space-y-4">
+			<div class="flex items-start justify-between gap-4">
+				<div>
+					<h2 class="text-xl font-black">Portafolio Personal</h2>
+					<p class="text-sm text-neutral-600">
+						Este sitio. Construido con Astro 7, Svelte 5 y Tailwind CSS 4 en estilo neobrutalista.
+					</p>
+				</div>
+				<a href="/" class="neob-clickable shrink-0 bg-green-200 px-4 py-2 text-xs font-bold">
+					Ver sitio ↗
+				</a>
+			</div>
+			<div class="neob-border overflow-hidden bg-white">
+				<div class="border-b-2 border-black bg-neutral-100 px-4 py-2 text-xs font-bold">
+					localhost:4321
+				</div>
+				<iframe src="/" class="h-[500px] w-full border-0" loading="lazy" title="Portafolio"
+				></iframe>
+			</div>
+			<div class="flex flex-wrap gap-2">
+				<span class="rounded-full border border-black bg-green-100 px-3 py-1 text-xs">Astro 7</span>
+				<span class="rounded-full border border-black bg-orange-100 px-3 py-1 text-xs"
+					>Svelte 5</span
+				>
+				<span class="rounded-full border border-black bg-cyan-100 px-3 py-1 text-xs"
+					>Tailwind CSS 4</span
+				>
+				<span class="rounded-full border border-black bg-yellow-100 px-3 py-1 text-xs"
+					>TypeScript</span
+				>
+			</div>
+		</article>
+	</section>
+</Layout>

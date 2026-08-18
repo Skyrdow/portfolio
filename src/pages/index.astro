@@ -1,0 +1,200 @@
+---
+import Layout from '@layouts/Layout.astro';
+
+const habilidades = [
+	'Lenguajes: C, Python, Go, TypeScript, C++, Java, C#, SQL',
+	'Sistemas embebidos: FreeRTOS, GNU/Linux, CMake, GCC',
+	'Backend & Web: Node.js, Spring Boot, Svelte, Astro, React, Vue, Tailwind CSS',
+	'Testing & DevOps: Git, GitLab, Docker Compose, SQLite',
+	'Cloud: Vercel, Azure'
+];
+---
+
+<Layout title="Lucas Mesías — Ingeniero Civil en Informática">
+	<!-- Hero -->
+	<section class="mb-16">
+		<div class="flex flex-col gap-8 md:flex-row md:items-start md:gap-12">
+			<div class="flex-1">
+				<h1 class="mb-4 text-4xl font-black">Ingeniero Civil en Informática</h1>
+				<p class="mb-2 text-lg font-bold text-neutral-500">Universidad de Santiago de Chile</p>
+				<p class="mb-6 text-lg leading-relaxed text-neutral-700">
+					Experiencia desarrollando software de vuelo y sistemas críticos en C, además de
+					automatización con Python e interfaces web modernas.
+				</p>
+				<div class="flex flex-wrap gap-3">
+					<span
+						class="rounded-full border-2 border-black bg-yellow-200 px-3 py-1 text-xs font-bold neob-border"
+					>
+						TypeScript
+					</span>
+					<span
+						class="rounded-full border-2 border-black bg-sky-200 px-3 py-1 text-xs font-bold neob-border"
+					>
+						C / C++
+					</span>
+					<span
+						class="rounded-full border-2 border-black bg-green-200 px-3 py-1 text-xs font-bold neob-border"
+					>
+						Python
+					</span>
+					<span
+						class="rounded-full border-2 border-black bg-orange-200 px-3 py-1 text-xs font-bold neob-border"
+					>
+						Svelte / Astro
+					</span>
+					<span
+						class="rounded-full border-2 border-black bg-purple-200 px-3 py-1 text-xs font-bold neob-border"
+					>
+						Go
+					</span>
+				</div>
+			</div>
+
+			<div class="neob-border w-full max-w-sm bg-lime-100 p-6 md:w-72">
+				<h2 class="mb-3 font-black">Contacto</h2>
+				<ul class="space-y-2 text-sm">
+					<li class="font-bold">Lucas Mesías</li>
+					<li>
+						<a href="https://github.com/skyrdow" class="underline hover:no-underline"
+							>github.com/skyrdow</a
+						>
+					</li>
+					<li>
+						<a href="mailto:lucas.mesias@usach.cl" class="underline hover:no-underline"
+							>lucas.mesias@usach.cl</a
+						>
+					</li>
+					<li>+56 9 3343 3172</li>
+					<li>Santiago, Chile</li>
+				</ul>
+			</div>
+		</div>
+	</section>
+
+	<!-- Experiencia -->
+	<section class="mb-16">
+		<h2 class="mb-4 text-2xl font-black">Experiencia</h2>
+		<div class="space-y-4">
+			<div class="neob-border bg-sky-50 p-4">
+				<div class="flex items-start justify-between">
+					<h3 class="font-black">Desarrollador de software de vuelo</h3>
+					<span class="text-xs text-neutral-500">Sept 2025 – Ago 2026</span>
+				</div>
+				<p class="text-sm font-bold text-neutral-600">SPEL / Scy-Fi Lab</p>
+				<p class="mt-2 text-sm text-neutral-700">
+					Diseñé e implementé sistemas autónomos para SUCHAI FS, coordinando más de 60 experimentos
+					científicos de la misión CubeSat SUCHAI 4.
+				</p>
+			</div>
+			<div class="neob-border bg-sky-50 p-4">
+				<div class="flex items-start justify-between">
+					<h3 class="font-black">Desarrollador de software (práctica)</h3>
+					<span class="text-xs text-neutral-500">Abr 2025 – Ene 2026</span>
+				</div>
+				<p class="text-sm font-bold text-neutral-600">
+					CITIAPS / Dirección Estratégica de Informática
+				</p>
+				<p class="mt-2 text-sm text-neutral-700">
+					Automatización de flujos de datos con Puppeteer y sistema de procesamiento documental con
+					OCR y API de Gemini.
+				</p>
+			</div>
+			<div class="neob-border bg-green-50 p-4">
+				<div class="flex items-start justify-between">
+					<h3 class="font-black">Cofundador y líder técnico</h3>
+					<span class="text-xs text-neutral-500">Ago 2023 – Actualidad</span>
+				</div>
+				<p class="text-sm font-bold text-neutral-600">OSUSACH</p>
+				<p class="mt-2 text-sm text-neutral-700">
+					Lideré equipos y coordiné la relación con clientes de la USACH. Interfaces con Astro,
+					Svelte y Tailwind CSS.
+				</p>
+			</div>
+		</div>
+	</section>
+
+	<!-- Habilidades -->
+	<section class="mb-16">
+		<h2 class="mb-4 text-2xl font-black">Habilidades técnicas</h2>
+		<div class="grid gap-3 sm:grid-cols-2">
+			{habilidades.map((h) => <div class="neob-border-inset bg-neutral-50 p-3 text-sm">{h}</div>)}
+		</div>
+	</section>
+
+	<!-- Proyectos -->
+	<section class="space-y-8">
+		<h2 class="text-2xl font-black">Proyectos web</h2>
+
+		<!-- OSUSACH -->
+		<article class="space-y-4">
+			<div class="flex items-start justify-between gap-4">
+				<div>
+					<h3 class="text-xl font-black">OSUSACH</h3>
+					<p class="text-sm text-neutral-600">
+						Comunidad open source de la USACH. Interfaces con Astro, Svelte y Tailwind CSS.
+					</p>
+				</div>
+				<a
+					href="https://www.osusach.com"
+					target="_blank"
+					rel="noopener noreferrer"
+					class="neob-clickable shrink-0 bg-yellow-200 px-4 py-2 text-xs font-bold"
+				>
+					Ver sitio ↗
+				</a>
+			</div>
+			<div class="neob-border overflow-hidden bg-white">
+				<div class="border-b-2 border-black bg-neutral-100 px-4 py-2 text-xs font-bold">
+					https://www.osusach.com
+				</div>
+				<iframe
+					src="https://www.osusach.com"
+					class="h-[500px] w-full border-0"
+					loading="lazy"
+					sandbox="allow-scripts allow-same-origin"
+					title="OSUSACH"></iframe>
+			</div>
+			<div class="flex flex-wrap gap-2">
+				<span class="rounded-full border border-black bg-sky-100 px-3 py-1 text-xs">Astro</span>
+				<span class="rounded-full border border-black bg-orange-100 px-3 py-1 text-xs">Svelte</span>
+				<span class="rounded-full border border-black bg-cyan-100 px-3 py-1 text-xs"
+					>Tailwind CSS</span
+				>
+			</div>
+		</article>
+
+		<!-- Portafolio -->
+		<article class="space-y-4">
+			<div class="flex items-start justify-between gap-4">
+				<div>
+					<h3 class="text-xl font-black">Portafolio Personal</h3>
+					<p class="text-sm text-neutral-600">
+						Este sitio. Astro 7, Svelte 5 y Tailwind CSS 4 en estilo neobrutalista.
+					</p>
+				</div>
+				<a href="/" class="neob-clickable shrink-0 bg-green-200 px-4 py-2 text-xs font-bold">
+					Ver sitio ↗
+				</a>
+			</div>
+			<div class="neob-border overflow-hidden bg-white">
+				<div class="border-b-2 border-black bg-neutral-100 px-4 py-2 text-xs font-bold">
+					localhost:4321
+				</div>
+				<iframe src="/" class="h-[500px] w-full border-0" loading="lazy" title="Portafolio"
+				></iframe>
+			</div>
+			<div class="flex flex-wrap gap-2">
+				<span class="rounded-full border border-black bg-green-100 px-3 py-1 text-xs">Astro 7</span>
+				<span class="rounded-full border border-black bg-orange-100 px-3 py-1 text-xs"
+					>Svelte 5</span
+				>
+				<span class="rounded-full border border-black bg-cyan-100 px-3 py-1 text-xs"
+					>Tailwind CSS 4</span
+				>
+				<span class="rounded-full border border-black bg-yellow-100 px-3 py-1 text-xs"
+					>TypeScript</span
+				>
+			</div>
+		</article>
+	</section>
+</Layout>

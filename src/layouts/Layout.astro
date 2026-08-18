@@ -1,0 +1,37 @@
+---
+import '@fontsource-variable/public-sans';
+import '../styles/global.css';
+
+interface Props {
+	title: string;
+	description?: string;
+}
+
+const { title, description = 'Portafolio personal de Lucas Mesias' } = Astro.props;
+---
+
+<!doctype html>
+<html lang="es">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta name="description" content={description} />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<title>{title}</title>
+	</head>
+	<body class="min-h-screen bg-white font-sans text-black">
+		<header class="border-b-2 border-black bg-lime-300 px-6 py-4 neob-border-y">
+			<nav class="mx-auto max-w-5xl">
+				<a href="/" class="text-xl font-black hover:underline">Lucas Mesías</a>
+			</nav>
+		</header>
+
+		<main class="mx-auto max-w-5xl px-6 py-10">
+			<slot />
+		</main>
+
+		<footer class="border-t-2 border-black bg-lime-200 px-6 py-6 text-center text-sm">
+			<p>&copy; {new Date().getFullYear()} Lucas Mesias &mdash; Hecho con Astro + Svelte</p>
+		</footer>
+	</body>
+</html>
