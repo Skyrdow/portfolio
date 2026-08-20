@@ -1,38 +1,50 @@
-# create-svelte
+# Portfolio — Lucas Mesias
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
+Personal portfolio site built with [Astro](https://astro.build/), [Svelte 5](https://svelte.dev/), and [Tailwind CSS 4](https://tailwindcss.com/).
 
-## Creating a project
+## Tech Stack
 
-If you're seeing this, you've probably already done this step. Congrats!
+- **Astro 7** — static site generation with island architecture
+- **Svelte 5** — interactive islands (calculadora, D3 visualizations)
+- **Tailwind CSS 4** — utility-first styling via Vite plugin
+- **TypeScript** — type safety across the project
+- **D3.js** — force-directed graph and signal visualizations
+- **Bun** — package manager and runtime
 
-```bash
-# create a new project in the current directory
-npm create svelte@latest
-
-# create a new project in my-app
-npm create svelte@latest my-app
-```
-
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+## Getting Started
 
 ```bash
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
+bun install
+bun run dev
 ```
 
-## Building
+Open [http://localhost:4321](http://localhost:4321) in your browser.
 
-To create a production version of your app:
+## Commands
 
-```bash
-npm run build
+| Command           | Description               |
+| ----------------- | ------------------------- |
+| `bun run dev`     | Start development server  |
+| `bun run build`   | Build for production      |
+| `bun run preview` | Preview production build  |
+| `bun run check`   | Run type checking         |
+| `bun run format`  | Format code with Prettier |
+
+## Project Structure
+
+```
+src/
+├── components/       # Svelte 5 islands + Astro components
+├── content/          # Content collections (curriculum data)
+├── layouts/          # Page layouts
+├── lib/              # Shared utilities (calculadora, D3 canvas)
+├── pages/            # File-based routes
+└── styles/           # Global CSS (Tailwind + neobrutalist utilities)
 ```
 
-You can preview the production build with `npm run preview`.
+## Pages
 
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+- `/` — Engineering curriculum grid (malla)
+- `/calculadora` — GPA calculator with localStorage persistence
+- `/eda` — Interactive D3 force-directed graph
+- `/psi` — Signal/vector visualization with D3

@@ -16,14 +16,41 @@
 		canvas.width = W;
 		canvas.height = H;
 
+		// Load earth texture
+		const earthImg = new Image();
+		earthImg.src = '/earth-topology.png';
+		let earthReady = false;
+		earthImg.onload = () => {
+			earthReady = true;
+		};
+
 		function lonLatToXY(lon: number, lat: number): [number, number] {
 			const x = ((lon + 180) / 360) * W;
 			const y = ((90 - lat) / 180) * H;
 			return [x, y];
 		}
 
+		function drawGrid() {
+			ctx!.strokeStyle = 'rgba(255, 255, 255, 0.08)';
+			ctx!.lineWidth = 0.5;
+			for (let lon = -180; lon <= 180; lon += 30) {
+				const [x] = lonLatToXY(lon, 0);
+				ctx!.beginPath();
+				ctx!.moveTo(x, 0);
+				ctx!.lineTo(x, H);
+				ctx!.stroke();
+			}
+			for (let lat = -60; lat <= 60; lat += 30) {
+				const [, y] = lonLatToXY(0, lat);
+				ctx!.beginPath();
+				ctx!.moveTo(0, y);
+				ctx!.lineTo(W, y);
+				ctx!.stroke();
+			}
+		}
+
 		function drawCoastlines() {
-			ctx!.strokeStyle = '#44cc88';
+			ctx!.strokeStyle = 'rgba(100, 255, 180, 0.4)';
 			ctx!.lineWidth = 1;
 			for (const continent of CONTINENTS) {
 				ctx!.beginPath();
@@ -36,32 +63,16 @@
 			}
 		}
 
-		function drawGrid() {
-			ctx!.strokeStyle = 'rgba(50, 100, 150, 0.2)';
-			ctx!.lineWidth = 0.5;
-			// Meridians every 30°
-			for (let lon = -180; lon <= 180; lon += 30) {
-				const [x] = lonLatToXY(lon, 0);
-				ctx!.beginPath();
-				ctx!.moveTo(x, 0);
-				ctx!.lineTo(x, H);
-				ctx!.stroke();
-			}
-			// Parallels every 30°
-			for (let lat = -60; lat <= 60; lat += 30) {
-				const [, y] = lonLatToXY(0, lat);
-				ctx!.beginPath();
-				ctx!.moveTo(0, y);
-				ctx!.lineTo(W, y);
-				ctx!.stroke();
-			}
-		}
-
 		const animate = () => {
 			animId = requestAnimationFrame(animate);
 
-			ctx!.fillStyle = '#0c2d48';
-			ctx!.fillRect(0, 0, W, H);
+			// Background: earth texture or fallback
+			if (earthReady) {
+				ctx!.drawImage(earthImg, 0, 0, W, H);
+			} else {
+				ctx!.fillStyle = '#0a1628';
+				ctx!.fillRect(0, 0, W, H);
+			}
 
 			drawGrid();
 			drawCoastlines();
@@ -70,7 +81,7 @@
 
 			// Orbit ground track
 			const orbitPts = propagateOrbit(now, 360);
-			ctx!.strokeStyle = 'rgba(255, 136, 51, 0.5)';
+			ctx!.strokeStyle = 'rgba(255, 136, 51, 0.6)';
 			ctx!.lineWidth = 1.5;
 			ctx!.beginPath();
 			let started = false;
@@ -93,7 +104,7 @@
 			const [sx, sy] = lonLatToXY(state.lon, state.lat);
 
 			// Footprint circle
-			const fpDeg = state.footprintRadius / 111.32; // approx km → degrees
+			const fpDeg = state.footprintRadius / 111.32;
 			ctx!.strokeStyle = 'rgba(255, 136, 51, 0.4)';
 			ctx!.lineWidth = 1;
 			ctx!.beginPath();

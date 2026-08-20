@@ -7,6 +7,7 @@
 
 	let container: HTMLDivElement | null = $state(null);
 	let animId = $state(0);
+	let satelliteView = $state(false);
 
 	onMount(() => {
 		if (!container) return;
@@ -15,13 +16,12 @@
 		const h = 500;
 
 		const scene = new THREE.Scene();
-		scene.background = new THREE.Color(0x0a0a0a);
 
 		const camera = new THREE.PerspectiveCamera(45, w / h, 1, 100000);
 		camera.position.set(0, 4000, 14000);
 		camera.lookAt(0, 0, 0);
 
-		const renderer = new THREE.WebGLRenderer({ antialias: true });
+		const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
 		renderer.setSize(w, h);
 		renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 		container.appendChild(renderer.domElement);
@@ -76,21 +76,60 @@
 		const spelPos = lonLatToPos(-70.67, -33.45, R);
 		const spelDir = spelPos.clone().normalize();
 
-		// Pin line
-		const pinLen = 250;
-		const pinGeo = new THREE.BufferGeometry().setFromPoints([
-			spelPos.clone().add(spelDir.clone().multiplyScalar(20)),
-			spelPos.clone().add(spelDir.clone().multiplyScalar(pinLen))
-		]);
-		scene.add(new THREE.Line(pinGeo, new THREE.LineBasicMaterial({ color: 0x44ff88 })));
+		// Chilean flag texture
+		const flagCanvas = document.createElement('canvas');
+		flagCanvas.width = 240;
+		flagCanvas.height = 160;
+		const fctx = flagCanvas.getContext('2d')!;
+		// White top half
+		fctx.fillStyle = '#ffffff';
+		fctx.fillRect(0, 0, 240, 80);
+		// Red bottom half
+		fctx.fillStyle = '#d52b1e';
+		fctx.fillRect(0, 80, 240, 80);
+		// Blue square top-left
+		fctx.fillStyle = '#0039a6';
+		fctx.fillRect(0, 0, 96, 80);
+		// White star
+		fctx.fillStyle = '#ffffff';
+		fctx.beginPath();
+		const cx = 48,
+			cy = 40,
+			outer = 22,
+			inner = 10;
+		for (let i = 0; i < 10; i++) {
+			const r = i % 2 === 0 ? outer : inner;
+			const a = (Math.PI * 2 * i) / 10 - Math.PI / 2;
+			if (i === 0) fctx.moveTo(cx + r * Math.cos(a), cy + r * Math.sin(a));
+			else fctx.lineTo(cx + r * Math.cos(a), cy + r * Math.sin(a));
+		}
+		fctx.closePath();
+		fctx.fill();
 
-		// Pin head (sphere)
-		const pinHead = new THREE.Mesh(
-			new THREE.SphereGeometry(50, 12, 8),
-			new THREE.MeshBasicMaterial({ color: 0x44ff88 })
+		const flagTex = new THREE.CanvasTexture(flagCanvas);
+
+		// Flag group: anchored at surface, oriented radially outward
+		const flagW = 240,
+			flagH = 160;
+		const flagGroup = new THREE.Group();
+		flagGroup.position.copy(spelPos);
+		// Compute orientation: +Z = outward, +Y = up along pole
+		const outward = spelDir.clone().normalize();
+		const arbitrary =
+			Math.abs(outward.y) < 0.99 ? new THREE.Vector3(0, 1, 0) : new THREE.Vector3(1, 0, 0);
+		const right = new THREE.Vector3().crossVectors(arbitrary, outward).normalize();
+		const poleUp = new THREE.Vector3().crossVectors(outward, right).normalize();
+		const rotMat = new THREE.Matrix4().makeBasis(right, poleUp, outward);
+		flagGroup.quaternion.setFromRotationMatrix(rotMat);
+		scene.add(flagGroup);
+
+		// Flag mesh
+		const flagMesh = new THREE.Mesh(
+			new THREE.PlaneGeometry(flagW, flagH),
+			new THREE.MeshBasicMaterial({ map: flagTex, side: THREE.DoubleSide })
 		);
-		pinHead.position.copy(spelPos.clone().add(spelDir.clone().multiplyScalar(pinLen + 30)));
-		scene.add(pinHead);
+		flagMesh.position.set(flagW / 2, 0, flagH / 2 + 40);
+		flagGroup.add(flagMesh);
 
 		// Ground dot
 		const groundDot = new THREE.Mesh(
@@ -109,7 +148,7 @@
 		scene.add(
 			new THREE.Line(
 				orbitGeo,
-				new THREE.LineBasicMaterial({ color: 0xff8833, transparent: true, opacity: 0.6 })
+				new THREE.LineBasicMaterial({ color: 0x00ffcc, transparent: false, opacity: 1 })
 			)
 		);
 
@@ -149,11 +188,13 @@
 		);
 		scene.add(fpRing);
 
-		// Mouse orbit
+		// Mouse orbit / FPS look
 		let dragging = false;
 		let prev = { x: 0, y: 0 };
 		let rx = 0.3;
 		let ry = -1.0;
+		let satYaw = 0;
+		let satPitch = -Math.PI / 2;
 
 		const down = (e: MouseEvent) => {
 			dragging = true;
@@ -161,8 +202,15 @@
 		};
 		const move = (e: MouseEvent) => {
 			if (!dragging) return;
-			ry -= (e.clientX - prev.x) * 0.005;
-			rx = Math.max(-1.2, Math.min(1.2, rx + (e.clientY - prev.y) * 0.005));
+			const dx = (e.clientX - prev.x) * 0.005;
+			const dy = (e.clientY - prev.y) * 0.005;
+			if (satelliteView) {
+				satYaw -= dx;
+				satPitch = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, satPitch - dy));
+			} else {
+				ry -= dx;
+				rx = Math.max(-1.2, Math.min(1.2, rx + dy));
+			}
 			prev = { x: e.clientX, y: e.clientY };
 		};
 		const up = () => (dragging = false);
@@ -210,15 +258,35 @@
 			fpCone.quaternion.copy(q);
 
 			// Slow auto-rotate
-			ry += 0.001;
+			if (!satelliteView) ry += 0.0001;
 
-			const dist = 16000;
-			camera.position.set(
-				dist * Math.sin(ry) * Math.cos(rx),
-				dist * Math.sin(rx) + 3000,
-				dist * Math.cos(ry) * Math.cos(rx)
-			);
-			camera.lookAt(0, 0, 0);
+			if (satelliteView) {
+				// FPS camera at satellite position
+				camera.position.copy(satPos);
+
+				// Build local frame: down = toward Earth center
+				const down = satPos.clone().negate().normalize();
+				const ref =
+					Math.abs(down.y) < 0.99 ? new THREE.Vector3(0, 1, 0) : new THREE.Vector3(1, 0, 0);
+				const right = new THREE.Vector3().crossVectors(down, ref).normalize();
+				const forward = new THREE.Vector3().crossVectors(right, down).normalize();
+
+				// Start looking forward (tangent), apply yaw then pitch
+				const look = forward.clone();
+				look.applyAxisAngle(down, satYaw);
+				look.applyAxisAngle(right, satPitch);
+
+				const target = satPos.clone().add(look.multiplyScalar(1000));
+				camera.lookAt(target);
+			} else {
+				const dist = 16000;
+				camera.position.set(
+					dist * Math.sin(ry) * Math.cos(rx),
+					dist * Math.sin(rx) + 3000,
+					dist * Math.cos(ry) * Math.cos(rx)
+				);
+				camera.lookAt(0, 0, 0);
+			}
 
 			renderer.render(scene, camera);
 		};
@@ -249,4 +317,14 @@
 
 <div class="space-y-3">
 	<div bind:this={container} class="neob-border overflow-hidden" style="cursor: grab;"></div>
+	<div class="flex justify-end">
+		<button
+			class="neob-clickable px-3 py-1 text-xs font-bold {satelliteView
+				? 'bg-orange-200'
+				: 'bg-neutral-100'}"
+			onclick={() => (satelliteView = !satelliteView)}
+		>
+			{satelliteView ? 'Vista orbital' : 'Vista satélite'}
+		</button>
+	</div>
 </div>

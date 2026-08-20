@@ -1,7 +1,6 @@
 ---
 import Layout from '@layouts/Layout.astro';
 import Suchai4 from '@components/SUCHAI4.svelte';
-import Suchai4Map from '@components/SUCHAI4Map.svelte';
 
 const habilidades = [
 	'Lenguajes: C, Python, Go, TypeScript, C++, Java, C#, SQL',
@@ -122,10 +121,6 @@ const habilidades = [
 			Trayectoria orbital real del CubeSat SUCHAI 4. Datos propagados desde TLE oficial.
 		</p>
 		<Suchai4 client:only="svelte" />
-		<div class="mt-4">
-			<p class="mb-2 text-xs font-bold text-neutral-500">Vista 2D — Equirectangular</p>
-			<Suchai4Map client:only="svelte" />
-		</div>
 	</section>
 
 	<!-- Habilidades -->
