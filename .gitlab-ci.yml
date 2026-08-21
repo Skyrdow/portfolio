@@ -1,10 +1,10 @@
 pages:
-  image: node:lts
+  image: oven/bun:latest
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
   script:
-    - npm ci
-    - npm run build
+    - bun install --frozen-lockfile
+    - bun run build
     # GitLab Pages espera los archivos en una carpeta 'public'.
     # Limpiamos si hay algo y movemos la salida 'dist' de Astro a 'public'
     - rm -rf public
