@@ -194,6 +194,33 @@
 		window.addEventListener('mousemove', move);
 		window.addEventListener('mouseup', up);
 
+		const touchStart = (e: TouchEvent) => {
+			e.preventDefault();
+			const t = e.touches[0];
+			dragging = true;
+			prev = { x: t.clientX, y: t.clientY };
+		};
+		const touchMove = (e: TouchEvent) => {
+			if (!dragging) return;
+			e.preventDefault();
+			const t = e.touches[0];
+			const dx = (t.clientX - prev.x) * 0.005;
+			const dy = (t.clientY - prev.y) * 0.005;
+			if (satelliteView) {
+				satYaw -= dx;
+				satPitch = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, satPitch - dy));
+			} else {
+				ry -= dx;
+				rx = Math.max(-1.2, Math.min(1.2, rx + dy));
+			}
+			prev = { x: t.clientX, y: t.clientY };
+		};
+		const touchEnd = () => (dragging = false);
+
+		el.addEventListener('touchstart', touchStart, { passive: false });
+		window.addEventListener('touchmove', touchMove, { passive: false });
+		window.addEventListener('touchend', touchEnd);
+
 		const animate = () => {
 			animId = requestAnimationFrame(animate);
 
@@ -280,6 +307,9 @@
 			el.removeEventListener('mousedown', down);
 			window.removeEventListener('mousemove', move);
 			window.removeEventListener('mouseup', up);
+			el.removeEventListener('touchstart', touchStart);
+			window.removeEventListener('touchmove', touchMove);
+			window.removeEventListener('touchend', touchEnd);
 			window.removeEventListener('resize', onResize);
 			renderer.dispose();
 			if (container && renderer.domElement.parentNode === container) {
