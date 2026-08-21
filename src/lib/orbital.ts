@@ -10,6 +10,7 @@ export interface SatelliteState {
 	lon: number;
 }
 
+// SUCHAI 4 TLE
 const satrec = satellite.twoline2satrec(
 	'1 69911U 26156AU  26229.21992664  .00000797  00000-0  86752-4 0  9991',
 	'2 69911  97.7496 128.9351 0002686  35.5298 324.6099 14.90755086  6096'

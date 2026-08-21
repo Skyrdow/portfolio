@@ -72,4 +72,18 @@
 	.bg-neutral-opacidad {
 		background-color: oklch(0.5555 0 0 / 0.2);
 	}
+
+	.skeleton-pulse {
+		animation: pulse 1.5s ease-in-out infinite;
+	}
+
+	@keyframes pulse {
+		0%,
+		100% {
+			opacity: 1;
+		}
+		50% {
+			opacity: 0.4;
+		}
+	}
 }

@@ -27,7 +27,10 @@
 		container.appendChild(renderer.domElement);
 
 		const textureLoader = new THREE.TextureLoader();
-		const earthTex = textureLoader.load('/earth.jpg');
+		const earthTex = textureLoader.load('/earth.jpg', () => {
+			const skel = document.getElementById('suchai-skeleton');
+			if (skel) skel.style.display = 'none';
+		});
 		earthTex.colorSpace = THREE.SRGBColorSpace;
 
 		// Earth
@@ -76,37 +79,8 @@
 		const spelPos = lonLatToPos(-70.67, -33.45, R);
 		const spelDir = spelPos.clone().normalize();
 
-		// Chilean flag texture
-		const flagCanvas = document.createElement('canvas');
-		flagCanvas.width = 240;
-		flagCanvas.height = 160;
-		const fctx = flagCanvas.getContext('2d')!;
-		// White top half
-		fctx.fillStyle = '#ffffff';
-		fctx.fillRect(0, 0, 240, 80);
-		// Red bottom half
-		fctx.fillStyle = '#d52b1e';
-		fctx.fillRect(0, 80, 240, 80);
-		// Blue square top-left
-		fctx.fillStyle = '#0039a6';
-		fctx.fillRect(0, 0, 96, 80);
-		// White star
-		fctx.fillStyle = '#ffffff';
-		fctx.beginPath();
-		const cx = 48,
-			cy = 40,
-			outer = 22,
-			inner = 10;
-		for (let i = 0; i < 10; i++) {
-			const r = i % 2 === 0 ? outer : inner;
-			const a = (Math.PI * 2 * i) / 10 - Math.PI / 2;
-			if (i === 0) fctx.moveTo(cx + r * Math.cos(a), cy + r * Math.sin(a));
-			else fctx.lineTo(cx + r * Math.cos(a), cy + r * Math.sin(a));
-		}
-		fctx.closePath();
-		fctx.fill();
-
-		const flagTex = new THREE.CanvasTexture(flagCanvas);
+		// Chilean flag from SVG
+		const flagTex = textureLoader.load('/Flag_of_Chile.svg');
 
 		// Flag group: anchored at surface, oriented radially outward
 		const flagW = 240,
