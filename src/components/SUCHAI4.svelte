@@ -167,8 +167,7 @@
 		let prev = { x: 0, y: 0 };
 		let rx = 0.3;
 		let ry = -1.0;
-		let satYaw = 0;
-		let satPitch = -Math.PI / 2;
+		let satLookQuat = new THREE.Quaternion();
 
 		const down = (e: MouseEvent) => {
 			dragging = true;
@@ -179,8 +178,10 @@
 			const dx = (e.clientX - prev.x) * 0.005;
 			const dy = (e.clientY - prev.y) * 0.005;
 			if (satelliteView) {
-				satYaw -= dx;
-				satPitch = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, satPitch - dy));
+				const yawQ = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), -dx);
+				const pitchQ = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1, 0, 0), -dy);
+				satLookQuat.multiply(yawQ).multiply(pitchQ);
+				satLookQuat.normalize();
 			} else {
 				ry -= dx;
 				rx = Math.max(-1.2, Math.min(1.2, rx + dy));
@@ -207,8 +208,9 @@
 			const dx = (t.clientX - prev.x) * 0.005;
 			const dy = (t.clientY - prev.y) * 0.005;
 			if (satelliteView) {
-				satYaw -= dx;
-				satPitch = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, satPitch - dy));
+				const yawQ = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), -dx);
+				const pitchQ = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1, 0, 0), -dy);
+				satLookQuat.multiply(yawQ).multiply(pitchQ);
 			} else {
 				ry -= dx;
 				rx = Math.max(-1.2, Math.min(1.2, rx + dy));
@@ -262,25 +264,23 @@
 			if (!satelliteView) ry += 0.0001;
 
 			if (satelliteView) {
-				// FPS camera at satellite position
 				camera.position.copy(satPos);
 
-				// Build local frame: down = toward Earth center
-				const down = satPos.clone().negate().normalize();
-				const ref =
-					Math.abs(down.y) < 0.99 ? new THREE.Vector3(0, 1, 0) : new THREE.Vector3(1, 0, 0);
-				const right = new THREE.Vector3().crossVectors(down, ref).normalize();
-				const forward = new THREE.Vector3().crossVectors(right, down).normalize();
+				const defaultLook = satPos.clone().negate().normalize();
+				const defaultUp = new THREE.Vector3(0, 1, 0);
+				const projUp = defaultUp
+					.clone()
+					.sub(defaultLook.clone().multiplyScalar(defaultUp.dot(defaultLook)));
+				if (projUp.length() < 0.01) projUp.set(1, 0, 0);
+				projUp.normalize();
 
-				// Start looking forward (tangent), apply yaw then pitch
-				const look = forward.clone();
-				look.applyAxisAngle(down, satYaw);
-				look.applyAxisAngle(right, satPitch);
-
-				const target = satPos.clone().add(look.multiplyScalar(1000));
-				camera.lookAt(target);
+				const lookQ = new THREE.Quaternion().setFromRotationMatrix(
+					new THREE.Matrix4().lookAt(new THREE.Vector3(0, 0, 0), defaultLook, projUp)
+				);
+				lookQ.multiply(satLookQuat);
+				camera.quaternion.copy(lookQ);
 			} else {
-				const dist = 16000;
+				const dist = 20000;
 				camera.position.set(
 					dist * Math.sin(ry) * Math.cos(rx),
 					dist * Math.sin(rx) + 3000,
@@ -326,7 +326,10 @@
 			class="neob-clickable px-3 py-1 text-xs font-bold {satelliteView
 				? 'bg-orange-200'
 				: 'bg-neutral-100'}"
-			onclick={() => (satelliteView = !satelliteView)}
+			onclick={() => {
+				satelliteView = !satelliteView;
+				if (satelliteView) satLookQuat.identity();
+			}}
 		>
 			{satelliteView ? 'Vista orbital' : 'Vista satélite'}
 		</button>
